@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Github, ExternalLink, Image } from 'lucide-react';
+import { Github, ExternalLink, Image, Download } from 'lucide-react'; // Adicionado o ícone Download
 
 const ProjectsSection = styled.section`
   min-height: 100vh;
@@ -59,6 +59,8 @@ const ProjectCard = styled.div`
   transition: all ${({ theme }) => theme.transitions.normal};
   box-shadow: ${({ theme }) => theme.shadows.md};
   border: 1px solid transparent;
+  display: flex; // Usando flex para alinhar o conteúdo
+  flex-direction: column; // Conteúdo em coluna
 
   &:hover {
     transform: translateY(-10px);
@@ -99,6 +101,9 @@ const ProjectImage = styled.div`
 
 const ProjectContent = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; // Faz o conteúdo crescer para preencher o card
 `;
 
 const ProjectTitle = styled.h3`
@@ -113,6 +118,7 @@ const ProjectDescription = styled.p`
   color: ${({ theme }) => theme.colors.text.muted};
   line-height: 1.6;
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  flex-grow: 1; // Empurra os botões para baixo
 `;
 
 const TechStack = styled.div`
@@ -135,6 +141,7 @@ const TechTag = styled.span`
 const ProjectButtons = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};
+  margin-top: auto; // Alinha os botões na base do card
 `;
 
 const ProjectButton = styled.a<{ $variant?: 'primary' | 'secondary' }>`
@@ -148,6 +155,7 @@ const ProjectButton = styled.a<{ $variant?: 'primary' | 'secondary' }>`
   gap: ${({ theme }) => theme.spacing.xs};
   transition: all ${({ theme }) => theme.transitions.fast};
   cursor: pointer;
+  text-align: center;
 
   ${({ $variant, theme }) => $variant === 'primary' ? `
     background: ${theme.colors.primary.accent};
@@ -170,38 +178,42 @@ const ProjectButton = styled.a<{ $variant?: 'primary' | 'secondary' }>`
   `}
 `;
 
+// Substituindo os projetos placeholder pelos seus projetos reais
 const projects = [
   {
-    title: 'E-commerce Moderno',
-    description: 'Plataforma completa de e-commerce com carrinho, pagamentos e painel administrativo.',
-    tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+    title: 'E-commerce de Joias',
+    description: 'Marca/Loja fundada em 2023 por mim. Criei um site no estilo landigpage/E-commerce para melhor experiencia com meus clientes, manter informações sobre a loja e vender meus produtos. Atualmente minha loja é referência em Prata 925 na minha cidade.',
+    tech: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Supabase', 'Netlify'],
+    demoUrl: 'https://www.pratasdamafia.com.br/',
+    repoUrl: null, // Repositório privado
+    demoText: 'Ver Site',
   },
   {
-    title: 'Dashboard Analytics',
-    description: 'Sistema de analytics com visualização de dados em tempo real e relatórios personalizados.',
-    tech: ['TypeScript', 'React', 'D3.js', 'PostgreSQL'],
+    title: 'Controle de Finanças Pessoal',
+    description: 'Sistema completo para gerenciar finanças pessoais, acompanhar receitas, despesas e definir orçamentos.',
+    tech: ['Node.js', 'Express', 'MySQL', 'JWT', 'HTML5', 'CSS3', 'JavaScript'],
+    demoUrl: null, // Não hospedado
+    repoUrl: 'https://github.com/Kauaog13/financas-app.git',
+    demoText: 'Live Demo',
   },
   {
-    title: 'App de Tarefas',
-    description: 'Aplicativo de gerenciamento de tarefas com sincronização em tempo real e notificações.',
-    tech: ['React Native', 'Firebase', 'Redux', 'Styled Components'],
-  },
-  {
-    title: 'Plataforma de Blog',
-    description: 'CMS personalizado para blogs com editor rico, SEO otimizado e sistema de comentários.',
-    tech: ['Next.js', 'Markdown', 'Tailwind', 'Supabase'],
-  },
-  {
-    title: 'Sistema de Reservas',
-    description: 'Sistema completo de agendamento e reservas com calendário interativo e notificações.',
-    tech: ['Vue.js', 'Express', 'MySQL', 'Socket.io'],
-  },
-  {
-    title: 'API RESTful',
-    description: 'API escalável com autenticação JWT, rate limiting e documentação completa.',
-    tech: ['Node.js', 'Express', 'MongoDB', 'Swagger'],
+    title: 'Organizador de Arquivos (Desktop)',
+    description: 'App Python com interface Tkinter para organizar arquivos automaticamente em subpastas com base na extensão.',
+    tech: ['Python', 'Tkinter', 'threading', 'PyInstaller'],
+    demoUrl: 'https://github.com/Kauaog13/files-organizer-py/releases/tag/v1.0.0',
+    repoUrl: 'https://github.com/Kauaog13/files-organizer-py.git',
+    demoText: 'Baixar App',
   },
 ];
+
+// Função para escolher o ícone do botão principal
+const getDemoIcon = (demoText: string) => {
+  if (demoText === 'Baixar App') {
+    return <Download size={18} />;
+  }
+  return <ExternalLink size={18} />;
+};
+
 
 const Projects = () => {
   return (
@@ -223,14 +235,21 @@ const Projects = () => {
                   ))}
                 </TechStack>
                 <ProjectButtons>
-                  <ProjectButton href="#" $variant="primary">
-                    <ExternalLink size={18} />
-                    Live Demo
-                  </ProjectButton>
-                  <ProjectButton href="#" $variant="secondary">
-                    <Github size={18} />
-                    Ver Código
-                  </ProjectButton>
+                  {/* Botão de Demo/Site (Condicional) */}
+                  {project.demoUrl && (
+                    <ProjectButton href={project.demoUrl} target="_blank" rel="noopener noreferrer" $variant="primary">
+                      {getDemoIcon(project.demoText || 'Live Demo')}
+                      {project.demoText || 'Live Demo'}
+                    </ProjectButton>
+                  )}
+                  
+                  {/* Botão de Código (Condicional) */}
+                  {project.repoUrl && (
+                    <ProjectButton href={project.repoUrl} target="_blank" rel="noopener noreferrer" $variant="secondary">
+                      <Github size={18} />
+                      Ver Código
+                    </ProjectButton>
+                  )}
                 </ProjectButtons>
               </ProjectContent>
             </ProjectCard>

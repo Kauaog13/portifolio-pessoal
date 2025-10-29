@@ -44,7 +44,7 @@ const Footer = () => {
     <FooterContainer>
       <FooterContent>
         <FooterText>
-          Desenvolvido com <Heart size={16} fill="currentColor" /> e <Code2 size={16} /> por Você
+          Desenvolvido por Kauã Oliveira
         </FooterText>
         <Copyright>
           © {currentYear} Todos os direitos reservados.

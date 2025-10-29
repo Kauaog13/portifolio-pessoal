@@ -168,27 +168,26 @@ const Hero = () => {
 
       <HeroContent>
         <Greeting>Olá, eu sou</Greeting>
-        <Name>Seu Nome Aqui</Name>
+        <Name>Kauã Oliveira Gonçalves</Name>
         <Title>
-          <span>Desenvolvedor Full Stack</span> & Criador de Soluções
+          <span>Desenvolvedor Full Stack</span> & Empreendedor Digital
         </Title>
         <Bio>
           Apaixonado por transformar ideias em realidade através de código limpo e interfaces intuitivas.
           Especializado em criar experiências web modernas e eficientes.
         </Bio>
         <SocialLinks>
-          <SocialLink href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <SocialLink href="https://github.com/Kauaog13" target="_blank" rel="noopener noreferrer">
             <Github size={24} />
           </SocialLink>
-          <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+          <SocialLink href="https://www.linkedin.com/in/kau%C3%A3-oliveira-7a099b270/" target="_blank" rel="noopener noreferrer">
             <Linkedin size={24} />
           </SocialLink>
-          <SocialLink href="mailto:seu@email.com">
+          <SocialLink href="mailto:kauaog13@gmail.com">
             <Mail size={24} />
           </SocialLink>
         </SocialLinks>
       </HeroContent>
-
       <ScrollIndicator onClick={scrollToNext}>
         <ChevronDown size={32} />
       </ScrollIndicator>

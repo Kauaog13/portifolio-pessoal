@@ -131,7 +131,7 @@ const Navbar = () => {
     <Nav $scrolled={scrolled}>
       <NavContainer>
         <Logo href="#" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          {'<Dev />'}
+          {'Kauã Oliveira'}
         </Logo>
 
         <MenuButton onClick={() => setIsOpen(!isOpen)}>

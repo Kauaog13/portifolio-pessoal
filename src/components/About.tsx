@@ -157,7 +157,7 @@ const About = () => {
               ideias complexas em produtos simples e eficientes.
             </Paragraph>
             <Paragraph>
-              Minha jornada no desenvolvimento web começou há alguns anos, e desde então venho
+              Minha jornada no desenvolvimento web começou em 2023, e desde então venho
               constantemente aprendendo e me adaptando às novas tecnologias do mercado. Acredito
               que código limpo, boas práticas e experiência do usuário são fundamentais para
               criar aplicações de qualidade.
