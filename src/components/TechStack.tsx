@@ -134,73 +134,7 @@ const TechName = styled.span`
   word-break: break-word; /* <-- ADICIONADO */
 `;
 
-const techCategories = [
-  {
-    title: 'Frontend',
-    icon: <Layout size={24} />,
-    technologies: [
-      { name: 'React', icon: 'R' },
-      { name: 'TypeScript', icon: 'TS' },
-      { name: 'Next.js', icon: 'N' },
-      { name: 'Tailwind CSS', icon: 'TW' },
-      { name: 'Styled Components', icon: 'SC' },
-      { name: 'Redux', icon: 'RX' },
-    ],
-  },
-  {
-    title: 'Backend',
-    icon: <Server size={24} />,
-    technologies: [
-      { name: 'REST API', icon: 'API' },
-      { name: 'Node.js', icon: 'N' },
-      { name: 'Express', icon: 'E' },
-      { name: 'Python', icon: 'PY' },
-      { name: 'PHP', icon: 'PHP' },
-      { name: 'Java', icon: 'JV' },
-    ],
-  },
-  {
-    title: 'Database',
-    icon: <Database size={24} />,
-    technologies: [
-      { name: 'MySQL', icon: 'SQL' },
-      { name: 'PostgreSQL', icon: 'PG' },
-      { name: 'Supabase', icon: 'SB' },
-      { name: 'MongoDB', icon: 'M' },
-    ],
-  },
-  {
-    title: 'Mobile',
-    icon: <Smartphone size={24} />,
-    technologies: [
-      { name: 'React Native', icon: 'RN' },
-    ],
-  },
-  {
-    title: 'DevOps & Tools',
-    icon: <Settings size={24} />,
-    technologies: [
-      { name: 'Git/Github', icon: 'G' },
-      { name: 'CI/CD', icon: 'CI' },
-      { name: 'Netlify', icon: 'NF' },
-      { name: 'Vercel', icon: 'V' },
-      { name: 'Cloudnary', icon: 'CN' },
-      { name: 'Google Gemini', icon: 'GG' },
-    ],
-  },
-  {
-    title: 'Outros',
-    icon: <Package size={24} />,
-    technologies: [
-      { name: 'Webpack', icon: 'W' },
-      { name: 'Vite', icon: 'V' },  
-      { name: 'Pacote Office', icon: 'PO' },
-      { name: 'Figma', icon: 'F' },
-      { name: 'Canva', icon: 'C' },
-      { name: 'Postman', icon: 'PM' },
-    ],
-  },
-];
+
 
 const TechStack = () => {
   return (

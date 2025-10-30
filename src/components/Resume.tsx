@@ -188,47 +188,7 @@ const ItemDescription = styled.p`
   line-height: 1.6;
 `;
 
-const experiences = [
-   {
-    title: 'Freelancer Full Stack Developer',
-    company: 'Oliveirak Tech Solutions',
-    period: '2025 - Presente',
-    description: 'Desenvolvimento de soluções web personalizadas para clientes diversos, utilizando tecnologias modernas como React, Node.js e bancos de dados SQL. Responsável por todo o ciclo de vida do desenvolvimento, desde a concepção até a implantação e manutenção.',
-  },
-  {
-    title: 'CEO & Fundador',
-    company: 'Pratas da Máfia',
-    period: '2023 - Presente',
-    description: 'Atuo como CEO e fundador da Pratas da Máfia, liderando a empresa em estratégias de mercado, desenvolvimento de produtos e expansão dos negócios no setor de joias e acessórios. Responsável por estabelecer parcerias estratégicas, atendimento ao cliente, e desenvolvimento da presenaça digital da marca.',
-  },
-  {
-    title: 'Soldado',
-    company: 'Exército Brasileiro',
-    period: '2022 - 2023',
-    description: 'Atuação em operações de artilharia, manutenção de equipamentos militares e participação em treinamentos estratégicos.',
-  },
-];
 
-const education = [
-  {
-    title: 'Analise e Desenvolvimento de Sistemas',
-    institution: 'Faculdade de Tecnologia e Inovação Senac-DF',
-    period: '2024 - (Cursando)',
-    description: 'Curso focado em desenvolvimento de software, metodologias ágeis, arquitetura de sistemas, documentação técnica e desenvolvimento web full stack.',
-  },
-  {
-    title: 'Programador de Sistemas',
-    institution: 'Senac Jesse Freire',
-    period: '2024 - 2024',
-    description: 'Curso focado no desenvolvimento de habilidades técnicas e práticas em programação, abrangendo desde a lógica de programação até a criação de softwares completos. Durante o programa, explorei linguagens como JavaScript, HTML, CSS , além de conceitos essenciais de bancos de dados, algoritmos, estrutura de dados e desenvolvimento web .',
-  },
-  {
-    title: 'Administrador de Bancos de Dados',
-    institution: 'Senac Sobradinho',
-    period: '2023 - 2023',
-    description: 'Curso focado em administração de bancos de dados, incluindo instalação, configuração, manutenção e otimização de sistemas de gerenciamento de bancos de dados relacionais. Durante o curso, adquiri conhecimentos práticos em SQL, modelagem de dados, backup e recuperação, segurança de dados e desempenho de consultas.',
-  },
-];
 
 const Resume = () => {
   return (
