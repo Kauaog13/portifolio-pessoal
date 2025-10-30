@@ -55,7 +55,7 @@ const CategoriesContainer = styled.div`
 const Category = styled.div`
   background: ${({ theme }) => theme.colors.background.card};
   border-radius: 16px;
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg}; /* <-- ALTERADO DE xl PARA lg */
   box-shadow: ${({ theme }) => theme.shadows.md};
   transition: all ${({ theme }) => theme.transitions.normal};
   border: 1px solid transparent;
@@ -105,6 +105,7 @@ const TechItem = styled.div`
   background: ${({ theme }) => theme.colors.primary.interactive}50;
   border-radius: 8px;
   transition: all ${({ theme }) => theme.transitions.fast};
+  min-width: 0; /* <-- ADICIONADO */
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary.interactive};
@@ -129,6 +130,8 @@ const TechName = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-weight: 500;
+  white-space: normal; /* <-- ADICIONADO */
+  word-break: break-word; /* <-- ADICIONADO */
 `;
 
 const techCategories = [
