@@ -1,6 +1,9 @@
+import { useState, useEffect } from 'react'; // Importar hooks
 import styled from 'styled-components';
 import { Briefcase, GraduationCap, Download, Calendar } from 'lucide-react';
+import { supabase } from '../services/supabaseClient'; // Importar Supabase
 
+// (Todos os estilos permanecem os mesmos)
 const ResumeSection = styled.section`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.xxl} ${({ theme }) => theme.spacing.xl};
@@ -188,16 +191,81 @@ const ItemDescription = styled.p`
   line-height: 1.6;
 `;
 
+// *** LÓGICA DE DADOS ATUALIZADA ***
 
+// 1. Interfaces
+interface Experience {
+  id: number;
+  titulo: string;
+  empresa: string;
+  periodo: string;
+  descricao: string;
+}
+
+interface Education {
+  id: number;
+  titulo: string;
+  instituicao: string;
+  periodo: string;
+  descricao: string;
+}
+
+// 2. Arrays estáticos removidos
 
 const Resume = () => {
+  // 3. Estados para os dados
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [cvUrl, setCvUrl] = useState<string>('#'); // URL do currículo
+  const [loading, setLoading] = useState(true);
+
+  // 4. Buscar todos os dados
+  useEffect(() => {
+    const fetchResumeData = async () => {
+      setLoading(true);
+      
+      // Criar promises para todas as buscas
+      const expPromise = supabase.from('experiencias').select('*').order('order', { ascending: true });
+      const eduPromise = supabase.from('formacao').select('*').order('order', { ascending: true });
+      const cvPromise = supabase.from('configuracoes').select('value').eq('key', 'url_curriculo').single();
+
+      // Executar todas em paralelo
+      const [expResult, eduResult, cvResult] = await Promise.all([expPromise, eduPromise, cvPromise]);
+
+      if (expResult.data) setExperiences(expResult.data);
+      if (eduResult.data) setEducation(eduResult.data);
+      if (cvResult.data) setCvUrl(cvResult.data.value);
+
+      if (expResult.error) console.error('Erro ao buscar experiências:', expResult.error);
+      if (eduResult.error) console.error('Erro ao buscar formação:', eduResult.error);
+      if (cvResult.error) console.error('Erro ao buscar URL do currículo:', cvResult.error);
+
+      setLoading(false);
+    };
+
+    fetchResumeData();
+  }, []);
+
+  // 5. Tela de Loading
+  if (loading) {
+    return (
+      <ResumeSection id="curriculo">
+        <Container>
+          <SectionTitle>Carregando Currículo...</SectionTitle>
+        </Container>
+      </ResumeSection>
+    );
+  }
+
+  // 6. Componente renderizado
   return (
     <ResumeSection id="curriculo">
       <Container>
         <SectionTitle>Currículo</SectionTitle>
 
         <ButtonContainer>
-          <DownloadButton href="#" download>
+          {/* Usar a URL do Supabase */}
+          <DownloadButton href={cvUrl} download target="_blank" rel="noopener noreferrer">
             <Download size={20} />
             Baixar Currículo
           </DownloadButton>
@@ -210,18 +278,18 @@ const Resume = () => {
               Experiência Profissional
             </ColumnTitle>
             <Timeline>
-              {experiences.map((exp, index) => (
-                <TimelineItem key={index}>
+              {experiences.map((exp) => (
+                <TimelineItem key={exp.id}>
                   <ItemCard>
                     <ItemHeader>
-                      <ItemTitle>{exp.title}</ItemTitle>
-                      <ItemSubtitle>{exp.company}</ItemSubtitle>
+                      <ItemTitle>{exp.titulo}</ItemTitle>
+                      <ItemSubtitle>{exp.empresa}</ItemSubtitle>
                       <ItemDate>
                         <Calendar />
-                        {exp.period}
+                        {exp.periodo}
                       </ItemDate>
                     </ItemHeader>
-                    <ItemDescription>{exp.description}</ItemDescription>
+                    <ItemDescription>{exp.descricao}</ItemDescription>
                   </ItemCard>
                 </TimelineItem>
               ))}
@@ -234,18 +302,18 @@ const Resume = () => {
               Formação Acadêmica
             </ColumnTitle>
             <Timeline>
-              {education.map((edu, index) => (
-                <TimelineItem key={index}>
+              {education.map((edu) => (
+                <TimelineItem key={edu.id}>
                   <ItemCard>
                     <ItemHeader>
-                      <ItemTitle>{edu.title}</ItemTitle>
-                      <ItemSubtitle>{edu.institution}</ItemSubtitle>
+                      <ItemTitle>{edu.titulo}</ItemTitle>
+                      <ItemSubtitle>{edu.instituicao}</ItemSubtitle>
                       <ItemDate>
                         <Calendar />
-                        {edu.period}
+                        {edu.periodo}
                       </ItemDate>
                     </ItemHeader>
-                    <ItemDescription>{edu.description}</ItemDescription>
+                    <ItemDescription>{edu.descricao}</ItemDescription>
                   </ItemCard>
                 </TimelineItem>
               ))}

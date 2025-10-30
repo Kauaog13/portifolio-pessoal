@@ -1,6 +1,9 @@
+import { useState, useEffect } from 'react'; // Importar hooks
 import styled from 'styled-components';
-import { Code2, Database, Settings, Smartphone, Layout, Server, GitBranch, Package } from 'lucide-react';
+import { Layout, Server, Database, Smartphone, Settings, Package } from 'lucide-react';
+import { supabase } from '../services/supabaseClient'; // Importar Supabase
 
+// (Estilos permanecem os mesmos - com a correção de quebra de linha)
 const TechSection = styled.section`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.xxl} ${({ theme }) => theme.spacing.xl};
@@ -55,7 +58,7 @@ const CategoriesContainer = styled.div`
 const Category = styled.div`
   background: ${({ theme }) => theme.colors.background.card};
   border-radius: 16px;
-  padding: ${({ theme }) => theme.spacing.lg}; /* <-- ALTERADO DE xl PARA lg */
+  padding: ${({ theme }) => theme.spacing.lg};
   box-shadow: ${({ theme }) => theme.shadows.md};
   transition: all ${({ theme }) => theme.transitions.normal};
   border: 1px solid transparent;
@@ -105,7 +108,7 @@ const TechItem = styled.div`
   background: ${({ theme }) => theme.colors.primary.interactive}50;
   border-radius: 8px;
   transition: all ${({ theme }) => theme.transitions.fast};
-  min-width: 0; /* <-- ADICIONADO */
+  min-width: 0;
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary.interactive};
@@ -130,29 +133,96 @@ const TechName = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-weight: 500;
-  white-space: normal; /* <-- ADICIONADO */
-  word-break: break-word; /* <-- ADICIONADO */
+  white-space: normal;
+  word-break: break-word;
 `;
 
+// *** LÓGICA DE DADOS ATUALIZADA ***
 
+// 1. Mapeamento de ícones (pode ser melhorado depois)
+const iconMap: { [key: string]: React.ReactNode } = {
+  Frontend: <Layout size={24} />,
+  Backend: <Server size={24} />,
+  Database: <Database size={24} />,
+  Mobile: <Smartphone size={24} />,
+  'DevOps & Tools': <Settings size={24} />,
+  Outros: <Package size={24} />,
+};
+
+// 2. Interfaces para os dados
+interface Technology {
+  id: number;
+  nome: string;
+  icon_text: string;
+}
+
+interface TechCategory {
+  id: number;
+  titulo: string;
+  tecnologias: Technology[]; // Supabase vai aninhar os dados aqui
+}
+
+// 3. Array 'techCategories' estático removido
 
 const TechStack = () => {
+  // 4. Estado para categorias e loading
+  const [categories, setCategories] = useState<TechCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 5. Buscar dados
+  useEffect(() => {
+    const fetchTech = async () => {
+      setLoading(true);
+      // Esta query busca 'categorias_tech' e, para cada uma,
+      // busca todas as 'tecnologias' relacionadas a ela.
+      const { data, error } = await supabase
+        .from('categorias_tech')
+        .select(`
+          id,
+          titulo,
+          tecnologias ( id, nome, icon_text )
+        `)
+        .order('id', { ascending: true });
+
+      if (error) {
+        console.error('Erro ao buscar tecnologias:', error);
+      } else if (data) {
+        setCategories(data as TechCategory[]);
+      }
+      setLoading(false);
+    };
+
+    fetchTech();
+  }, []);
+
+  // 6. Tela de Loading
+  if (loading) {
+    return (
+      <TechSection id="tecnologias">
+        <Container>
+          <SectionTitle>Carregando Tecnologias...</SectionTitle>
+        </Container>
+      </TechSection>
+    );
+  }
+
+  // 7. Componente renderizado com dados
   return (
     <TechSection id="tecnologias">
       <Container>
         <SectionTitle>Tecnologias</SectionTitle>
         <CategoriesContainer>
-          {techCategories.map((category, index) => (
-            <Category key={index}>
+          {categories.map((category) => (
+            <Category key={category.id}>
               <CategoryHeader>
-                <IconWrapper>{category.icon}</IconWrapper>
-                <CategoryTitle>{category.title}</CategoryTitle>
+                <IconWrapper>{iconMap[category.titulo] || <Package size={24} />}</IconWrapper>
+                <CategoryTitle>{category.titulo}</CategoryTitle>
               </CategoryHeader>
               <TechGrid>
-                {category.technologies.map((tech, techIndex) => (
-                  <TechItem key={techIndex}>
-                    <TechIcon>{tech.icon}</TechIcon>
-                    <TechName>{tech.name}</TechName>
+                {category.tecnologias.map((tech) => (
+                  <TechItem key={tech.id}>
+                    <TechIcon>{tech.icon_text}</TechIcon>
+                    <TechName>{tech.nome}</TechName>
                   </TechItem>
                 ))}
               </TechGrid>
