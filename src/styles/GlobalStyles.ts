@@ -27,6 +27,42 @@ export const GlobalStyles = createGlobalStyle<{ theme: Theme }>`
   #root {
     position: relative;
     overflow-x: hidden;
+    /* Cria um novo contexto de empilhamento */
+    isolation: isolate; 
+
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      
+      /* z-index: 1 coloca o efeito ATRÁS do conteúdo e NA FRENTE do fundo */
+      z-index: 1;
+
+      background: radial-gradient(
+        circle 500px at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(0, 0, 0, 0) 0%,     /* Centro transparente */
+        rgba(0, 0, 0, 0.5) 100%  /* Bordas escuras */
+      );
+
+      /* Desativa o efeito em telas menores (tablets/celulares) */
+      @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+        display: none;
+      }
+    }
+  }
+
+  /* *** ESTA É A CORREÇÃO PRINCIPAL ***
+    Força todo o conteúdo principal (seções e footer) a ter 
+    position: relative e z-index: 2.
+    Isso os coloca NA FRENTE do 'spotlight' (que tem z-index: 1).
+  */
+  section, footer {
+    position: relative;
+    z-index: 2;
   }
 
   h1, h2, h3, h4, h5, h6 {

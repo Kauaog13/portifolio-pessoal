@@ -33,6 +33,7 @@ const Logo = styled.a`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary.accent};
   transition: transform ${({ theme }) => theme.transitions.fast};
+  cursor: pointer; /* <-- ADICIONADO */
 
   &:hover {
     transform: scale(1.05);
@@ -69,6 +70,7 @@ const NavLink = styled.a`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   position: relative;
   transition: color ${({ theme }) => theme.transitions.fast};
+  cursor: pointer; /* <-- ADICIONADO */
 
   &::after {
     content: '';
