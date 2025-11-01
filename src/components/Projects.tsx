@@ -169,34 +169,37 @@ const ProjectButton = styled.a<{ $variant?: 'primary' | 'secondary' }>`
   `}
 `;
 
-// *** LÓGICA DE DADOS ATUALIZADA ***
+// *** LÓGICA DE DADOS ***
 
-// 1. Interface atualizada para corresponder ao Admin Panel
+// 1. Interface (a mesma da última vez)
 interface Project {
   id: number;
-  title: string;          // MUDOU DE 'titulo'
-  description: string;    // MUDOU DE 'descricao'
+  title: string;
+  description: string;
   image_url: string | null;
-  project_url: string | null; // MUDOU DE 'demo_url'
+  project_url: string | null;
   repo_url: string | null;
-  // 'techs' e 'demo_text' não existem na nova tabela (ainda!)
+  // 'techs' ainda não existe no admin
 }
 
 const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 2. Buscar dados do Supabase
+  // 2. Buscar dados do Supabase (COM ORDEM ATUALIZADA)
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
       
-      // MUDOU: de .from('projetos') para .from('projects')
-      // MUDOU: de .order('order') para .order('created_at')
+      // ===== MUDANÇA AQUI =====
+      // Agora ordena pela 'order_position' primeiro
+      // A data de criação é usada como "desempate"
       const { data, error } = await supabase
         .from('projects') 
         .select('*')
-        .order('created_at', { ascending: false }); // Ordena pelos mais novos
+        .order('order_position', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: true });
+      // ===== FIM DA MUDANÇA =====
 
       if (error) {
         console.error('Erro ao buscar projetos:', error);
@@ -234,31 +237,17 @@ const Projects = () => {
                 )}
               </ProjectImage>
               <ProjectContent>
-                {/* MUDOU: de project.titulo para project.title */}
                 <ProjectTitle>{project.title}</ProjectTitle>
-                
-                {/* MUDOU: de project.descricao para project.description */}
                 <ProjectDescription>{project.description}</ProjectDescription>
                 
-                {/* *** ATENÇÃO ***
-                  Ainda não temos um campo 'techs' no Admin.
-                  Vamos comentar esta parte por enquanto.
-                  Nosso próximo passo será adicionar isso!
-
-                <TechStack>
-                  {project.techs.map((tech, techIndex) => (
-                    <TechTag key={techIndex}>{tech}</TechTag>
-                  ))}
-                </TechStack>
+                {/* <TechStack>
+                    ...
+                  </TechStack>
                 */}
 
                 <ProjectButtons>
-                  {/* MUDOU: de project.demo_url para project.project_url */}
                   {project.project_url && (
                     <ProjectButton href={project.project_url} target="_blank" rel="noopener noreferrer" $variant="primary">
-                      {/* 'demo_text' também não existe ainda, 
-                        vamos usar um texto padrão 
-                      */}
                       <ExternalLink size={18} />
                       Ver Projeto
                     </ProjectButton>
