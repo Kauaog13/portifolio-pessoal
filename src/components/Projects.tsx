@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'; // Importar hooks
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Github, ExternalLink, Image, Download } from 'lucide-react';
-import { supabase } from '../services/supabaseClient'; // Importar Supabase
+import { supabase } from '../services/supabaseClient'; // Verifique se este caminho está correto
 
 // (Estilos permanecem os mesmos)
 const ProjectsSection = styled.section`
@@ -83,7 +83,6 @@ const ProjectImage = styled.div`
   position: relative;
   overflow: hidden;
 
-  /* Estilo para a imagem real */
   img {
     width: 100%;
     height: 100%;
@@ -172,41 +171,32 @@ const ProjectButton = styled.a<{ $variant?: 'primary' | 'secondary' }>`
 
 // *** LÓGICA DE DADOS ATUALIZADA ***
 
-// 1. Definir o tipo (Interface) para o seu projeto
+// 1. Interface atualizada para corresponder ao Admin Panel
 interface Project {
   id: number;
-  titulo: string;
-  descricao: string;
-  techs: string[];
+  title: string;          // MUDOU DE 'titulo'
+  description: string;    // MUDOU DE 'descricao'
   image_url: string | null;
-  demo_url: string | null;
+  project_url: string | null; // MUDOU DE 'demo_url'
   repo_url: string | null;
-  demo_text: string | null;
+  // 'techs' e 'demo_text' não existem na nova tabela (ainda!)
 }
 
-// 2. O array 'projects' estático foi removido
-
-// 3. Função do ícone (igual)
-const getDemoIcon = (demoText: string) => {
-  if (demoText === 'Baixar App') {
-    return <Download size={18} />;
-  }
-  return <ExternalLink size={18} />;
-};
-
 const Projects = () => {
-  // 4. Criar estado para os projetos e carregamento
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 5. Buscar dados do Supabase
+  // 2. Buscar dados do Supabase
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
+      
+      // MUDOU: de .from('projetos') para .from('projects')
+      // MUDOU: de .order('order') para .order('created_at')
       const { data, error } = await supabase
-        .from('projetos')
+        .from('projects') 
         .select('*')
-        .order('order', { ascending: true }); // Usar o campo 'order'
+        .order('created_at', { ascending: false }); // Ordena pelos mais novos
 
       if (error) {
         console.error('Erro ao buscar projetos:', error);
@@ -219,7 +209,6 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-  // 6. Tela de Loading
   if (loading) {
     return (
       <ProjectsSection id="projetos">
@@ -230,7 +219,6 @@ const Projects = () => {
     );
   }
 
-  // 7. Componente renderizado com dados do Supabase
   return (
     <ProjectsSection id="projetos">
       <Container>
@@ -240,24 +228,39 @@ const Projects = () => {
             <ProjectCard key={project.id}>
               <ProjectImage>
                 {project.image_url ? (
-                  <img src={project.image_url} alt={project.titulo} />
+                  <img src={project.image_url} alt={project.title} />
                 ) : (
                   <Image size={60} strokeWidth={1.5} />
                 )}
               </ProjectImage>
               <ProjectContent>
-                <ProjectTitle>{project.titulo}</ProjectTitle>
-                <ProjectDescription>{project.descricao}</ProjectDescription>
+                {/* MUDOU: de project.titulo para project.title */}
+                <ProjectTitle>{project.title}</ProjectTitle>
+                
+                {/* MUDOU: de project.descricao para project.description */}
+                <ProjectDescription>{project.description}</ProjectDescription>
+                
+                {/* *** ATENÇÃO ***
+                  Ainda não temos um campo 'techs' no Admin.
+                  Vamos comentar esta parte por enquanto.
+                  Nosso próximo passo será adicionar isso!
+
                 <TechStack>
                   {project.techs.map((tech, techIndex) => (
                     <TechTag key={techIndex}>{tech}</TechTag>
                   ))}
                 </TechStack>
+                */}
+
                 <ProjectButtons>
-                  {project.demo_url && (
-                    <ProjectButton href={project.demo_url} target="_blank" rel="noopener noreferrer" $variant="primary">
-                      {getDemoIcon(project.demo_text || 'Live Demo')}
-                      {project.demo_text || 'Live Demo'}
+                  {/* MUDOU: de project.demo_url para project.project_url */}
+                  {project.project_url && (
+                    <ProjectButton href={project.project_url} target="_blank" rel="noopener noreferrer" $variant="primary">
+                      {/* 'demo_text' também não existe ainda, 
+                        vamos usar um texto padrão 
+                      */}
+                      <ExternalLink size={18} />
+                      Ver Projeto
                     </ProjectButton>
                   )}
                   
