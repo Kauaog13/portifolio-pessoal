@@ -21,6 +21,7 @@ Ele é composto por seções principais:
 - **Tecnologias** → Lista das stacks utilizadas (atualmente estática, mas integrada ao banco).  
 - **Currículo** → Linha do tempo com experiências e formações, buscadas em tempo real do Supabase.  
 - **Contato** → Formulário funcional que envia mensagens para o banco de dados Supabase.  
+> [📜 Veja o Changelog COMPLETO](./CHANGELOG.md)
 
 ---
 
