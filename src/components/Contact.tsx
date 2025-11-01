@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Mail, Send, User, MessageSquare } from 'lucide-react';
+import { supabase } from '../services/supabaseClient'; // <-- 1. Importar o Supabase
+
+// (Estilos de ContactSection, Container, SectionTitle, Subtitle, FormContainer, Form...
+// ...FormGroup, Label, Input, TextArea, SubmitButton... permanecem os mesmos)
 
 const ContactSection = styled.section`
   min-height: 100vh;
@@ -174,6 +178,19 @@ const SuccessMessage = styled.div`
   margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
+// <-- 2. Adicionar um estilo para mensagens de ERRO -->
+const ErrorMessage = styled.div`
+  background: #ff4d4f20;
+  border: 2px solid #ff4d4f;
+  color: #ff4d4f;
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: ${({ theme }) => theme.spacing.md};
+`;
+
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -182,28 +199,46 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false); // <-- 3. Adicionar estado de erro
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Esconder mensagens de sucesso/erro ao digitar novamente
+    setShowSuccess(false);
+    setShowError(false);
+    
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
+  // <-- 4. FUNÇÃO HANDLE_SUBMIT ATUALIZADA -->
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setShowSuccess(false);
+    setShowError(false);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Tentar inserir os dados no Supabase
+    const { error } = await supabase
+      .from('mensagens') // Nome da sua tabela
+      .insert({
+        nome: formData.name,     // Coluna 'nome'
+        email: formData.email,   // Coluna 'email'
+        mensagem: formData.message // Coluna 'mensagem'
+      });
 
-    setIsSubmitting(false);
-    setShowSuccess(true);
-    setFormData({ name: '', email: '', message: '' });
+    if (error) {
+      // Se der erro
+      console.error('Erro ao enviar mensagem:', error);
+      setShowError(true);
+    } else {
+      // Se der certo
+      setShowSuccess(true);
+      setFormData({ name: '', email: '', message: '' }); // Limpar formulário
+    }
 
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 5000);
+    setIsSubmitting(false); // Parar o loading do botão
   };
 
   return (
@@ -269,10 +304,16 @@ const Contact = () => {
               {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
             </SubmitButton>
 
+            {/* <-- 5. Mostrar a mensagem de sucesso OU erro --> */}
             {showSuccess && (
               <SuccessMessage>
                 Mensagem enviada com sucesso! Entrarei em contato em breve.
               </SuccessMessage>
+            )}
+            {showError && (
+              <ErrorMessage>
+                Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.
+              </ErrorMessage>
             )}
           </Form>
         </FormContainer>
